@@ -1,0 +1,109 @@
+openapi: 3.0.0
+info:
+  title: Items API
+  version: "1.0"
+servers:
+  - url: http://localhost:5000
+paths:
+  /items:
+    get:
+      summary: Получить список всех элементов
+      responses:
+        '200':
+          description: Список элементов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+    post:
+      summary: Создать новый элемент
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewItem'
+      responses:
+        '201':
+          description: Элемент создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Неверный запрос
+  /items/{id}:
+    get:
+      summary: Получить элемент по идентификатору
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Элемент найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Элемент не найден
+    put:
+      summary: Обновить элемент по идентификатору
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewItem'
+      responses:
+        '200':
+          description: Элемент обновлён
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Неверный запрос
+        '404':
+          description: Элемент не найден
+    delete:
+      summary: Удалить элемент по идентификатору
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Элемент удалён
+        '404':
+          description: Элемент не найден
+
+components:
+  schemas:
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    NewItem:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
